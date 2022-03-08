@@ -1,9 +1,10 @@
 # Criar uma lista de tarefas que possa:
 """
--adicionar tarefa
--listar tarefa
--desfazer última ação
--refazer última ação
+[x] - adicionar tarefa
+[x] - listar tarefa
+[x] - desfazer última ação
+[x] - refazer última ação
+[] - login para ter múltiplas listas de diferentes tarefas
 """
 
 def listagem_tarefas(tarefas):
