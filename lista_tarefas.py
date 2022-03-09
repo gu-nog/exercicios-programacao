@@ -4,7 +4,7 @@
 [x] - listar tarefa
 [x] - desfazer última ação
 [x] - refazer última ação
-[] - login para ter múltiplas listas de diferentes tarefas
+[x] - login para ter múltiplas listas de diferentes tarefas
 """
 
 def listagem_tarefas(tarefas):
@@ -33,19 +33,76 @@ def redo_tarefas():
         print('\nNenhuma tarefa para readicionar!!\n')
 
 
-opção = ''
-tarefas = []
+def create_account(name, password):
+    if (name+password) not in all_tarefas.keys():
+        contas[name] = password
+        all_tarefas[name+password] = []
+        return True  # usuário criado com sucesso
+    else:
+        return False  # já existe esse usuário
+
+
+def login(name, password):
+    if name in contas.keys():
+        if contas[name] == password:
+            return True  # ok
+        else:
+            return False  # senha errada
+    else:
+        return False  # usuário errado
+
+
+def get_credentials():
+    user = input("Seu nome de usuário: ")
+    password = input("Sua senha: ")
+    return user, password
+
+
+# inicialization
+all_tarefas = {}
+contas = {}
 desfeitas = []
-while opção != 'sair':
-    opção = input('Oque você quer fazer:\n[1]-Adicionar tarefa\n[2]-Listar tarefa\n[3]-Desfazer ação\n[4]-Refazer ação\n')
-    if opção == '1':
+
+# login or create account
+opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
+while opcao not in ['1', '2']:
+    print('Favor escolher uma opcão válida(1 ou 2)')
+    opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
+
+user, password = get_credentials()
+while True:
+    if opcao == '1':
+        returned = login(user, password)
+        if returned == True:
+            print('Login efetuado com sucesso!!')
+            break
+        else:
+            print('Usuário e/ou senha incorretos.')
+            user, password = get_credentials()
+    else:
+        returned = create_account(user, password)
+        if returned == True:
+            print('Seja bem vindo!!! Conta criada com sucesso.')
+            break
+        else:
+            print('Infelizmente já existe um usuário com esse nome e senha:( Troque um ou outro.')
+            user, password = get_credentials()
+
+# session
+tarefas = all_tarefas[user+password]
+while opcao != 'sair':
+    opcao = input('Oque você quer fazer:\n[1]-Adicionar tarefa\n[2]-Listar tarefa\n[3]-Desfazer ação\n[4]-Refazer ação\nsair\n')
+    if opcao == '1':
         tarefa = input('Qual tarefa você deseja adicionar: ')
         tarefas.append(tarefa)
-    elif opção == '2':
+    elif opcao == '2':
         listagem_tarefas(tarefas)
-    elif opção == '3':
+    elif opcao == '3':
         undo_tarefas()
-    elif opção == '4':
+    elif opcao == '4':
         redo_tarefas()
-    elif opção != 'sair':
-        print('Opção não localizada, favor digitar apenas, por exemplo: 1')
+    elif opcao != 'sair':
+        print('Opção não localizada, favor digitar apenas opções válidas, por exemplo: 1')
+    else:
+        all_tarefas[user + password] = tarefas
+        print('Salvando lista final de tarefas, volte sempre!')
