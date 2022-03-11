@@ -5,6 +5,8 @@
 [x] - desfazer última ação
 [x] - refazer última ação
 [x] - login para ter múltiplas listas de diferentes tarefas
+[x] - passar da área de login para cadastro, vice-versa
+[] - trocar de usuário
 """
 
 def listagem_tarefas(tarefas):
@@ -58,6 +60,13 @@ def get_credentials():
     return user, password
 
 
+def change_sign_route():
+    change = input("Deseja trocar de área?[S/N]")
+    while change not in ['S', 'N']:
+        change = input("Deseja trocar de área?[S/N]")
+    return change
+
+
 # inicialization
 all_tarefas = {}
 contas = {}
@@ -70,7 +79,13 @@ while opcao not in ['1', '2']:
     opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
 
 user, password = get_credentials()
+change = change_sign_route()
 while True:
+    if change == 'S':
+        opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
+        while opcao not in ['1', '2']:
+            print('Favor escolher uma opcão válida(1 ou 2)')
+            opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
     if opcao == '1':
         returned = login(user, password)
         if returned == True:
@@ -78,14 +93,20 @@ while True:
             break
         else:
             print('Usuário e/ou senha incorretos.')
+            change = change_sign_route()
+            if change == 'S':
+                continue
             user, password = get_credentials()
-    else:
+    elif opcao == '2':
         returned = create_account(user, password)
         if returned == True:
             print('Seja bem vindo!!! Conta criada com sucesso.')
             break
         else:
             print('Infelizmente já existe um usuário com esse nome e senha:( Troque um ou outro.')
+            change = change_sign_route()
+            if change == 'S':
+                continue
             user, password = get_credentials()
 
 # session
