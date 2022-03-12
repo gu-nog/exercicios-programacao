@@ -6,13 +6,13 @@
 [x] - refazer última ação
 [x] - login para ter múltiplas listas de diferentes tarefas
 [x] - passar da área de login para cadastro, vice-versa
-[] - trocar de usuário
+[x] - trocar de usuário
 """
 
 def listagem_tarefas(tarefas):
     print('\n===== listagem de tarefas =====')
     for c, tarefa in enumerate(tarefas):
-        print(f'tarefa {c} - {tarefa}')
+        print(f'tarefa {c + 1} - {tarefa}')
     if len(tarefas) == 0:
         print('Nenhuma tarefa!!')
     print('\n\n')
@@ -67,52 +67,58 @@ def change_sign_route():
     return change
 
 
+def signin_or_signup():
+    # login or create account
+    opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
+    while opcao not in ['1', '2']:
+        print('Favor escolher uma opcão válida(1 ou 2)')
+        opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
+
+    user, password = get_credentials()
+    change = change_sign_route()
+    while True:
+        if change == 'S':
+            opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
+            while opcao not in ['1', '2']:
+                print('Favor escolher uma opcão válida(1 ou 2)')
+                opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
+        if opcao == '1':
+            returned = login(user, password)
+            if returned == True:
+                print('Login efetuado com sucesso!!')
+                break
+            else:
+                print('Usuário e/ou senha incorretos.')
+                change = change_sign_route()
+                if change == 'S':
+                    continue
+                user, password = get_credentials()
+        elif opcao == '2':
+            returned = create_account(user, password)
+            if returned == True:
+                print('Seja bem vindo!!! Conta criada com sucesso.')
+                break
+            else:
+                print('Infelizmente já existe um usuário com esse nome e senha:( Troque um ou outro.')
+                change = change_sign_route()
+                if change == 'S':
+                    continue
+                user, password = get_credentials()
+    return user, password
+
+
 # inicialization
 all_tarefas = {}
 contas = {}
 desfeitas = []
+opcao = str()
 
-# login or create account
-opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
-while opcao not in ['1', '2']:
-    print('Favor escolher uma opcão válida(1 ou 2)')
-    opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
-
-user, password = get_credentials()
-change = change_sign_route()
-while True:
-    if change == 'S':
-        opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
-        while opcao not in ['1', '2']:
-            print('Favor escolher uma opcão válida(1 ou 2)')
-            opcao = input("Oque você deseja fazer:\n[1]-login\n[2]-cadastrar\n")
-    if opcao == '1':
-        returned = login(user, password)
-        if returned == True:
-            print('Login efetuado com sucesso!!')
-            break
-        else:
-            print('Usuário e/ou senha incorretos.')
-            change = change_sign_route()
-            if change == 'S':
-                continue
-            user, password = get_credentials()
-    elif opcao == '2':
-        returned = create_account(user, password)
-        if returned == True:
-            print('Seja bem vindo!!! Conta criada com sucesso.')
-            break
-        else:
-            print('Infelizmente já existe um usuário com esse nome e senha:( Troque um ou outro.')
-            change = change_sign_route()
-            if change == 'S':
-                continue
-            user, password = get_credentials()
+user, password = signin_or_signup()
 
 # session
 tarefas = all_tarefas[user+password]
 while opcao != 'sair':
-    opcao = input('Oque você quer fazer:\n[1]-Adicionar tarefa\n[2]-Listar tarefa\n[3]-Desfazer ação\n[4]-Refazer ação\nsair\n')
+    opcao = input('Oque você quer fazer:\n[1]-Adicionar tarefa\n[2]-Listar tarefa\n[3]-Desfazer ação\n[4]-Refazer ação\nsair\nchange account\n')
     if opcao == '1':
         tarefa = input('Qual tarefa você deseja adicionar: ')
         tarefas.append(tarefa)
@@ -122,8 +128,12 @@ while opcao != 'sair':
         undo_tarefas()
     elif opcao == '4':
         redo_tarefas()
+    elif opcao == 'change account':
+        all_tarefas[user + password] = tarefas
+        user, password = signin_or_signup()
+        tarefas = all_tarefas[user + password]
+        desfeitas = []
     elif opcao != 'sair':
         print('Opção não localizada, favor digitar apenas opções válidas, por exemplo: 1')
     else:
-        all_tarefas[user + password] = tarefas
         print('Salvando lista final de tarefas, volte sempre!')
