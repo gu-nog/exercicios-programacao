@@ -7,6 +7,7 @@
 [x] - login para ter múltiplas listas de diferentes tarefas
 [x] - passar da área de login para cadastro, vice-versa
 [x] - trocar de usuário
+[] - trocar a senha
 """
 
 def listagem_tarefas(tarefas):
