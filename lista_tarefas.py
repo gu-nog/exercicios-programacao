@@ -7,7 +7,7 @@
 [x] - login para ter múltiplas listas de diferentes tarefas
 [x] - passar da área de login para cadastro, vice-versa
 [x] - trocar de usuário
-[] - trocar a senha
+[x] - trocar a senha
 """
 
 def listagem_tarefas(tarefas):
@@ -119,7 +119,14 @@ user, password = signin_or_signup()
 # session
 tarefas = all_tarefas[user+password]
 while opcao != 'sair':
-    opcao = input('Oque você quer fazer:\n[1]-Adicionar tarefa\n[2]-Listar tarefa\n[3]-Desfazer ação\n[4]-Refazer ação\nsair\nchange account\n')
+    opcao = input('Oque você quer fazer:'
+                  '\n[1]-Adicionar tarefa'
+                  '\n[2]-Listar tarefa'
+                  '\n[3]-Desfazer ação'
+                  '\n[4]-Refazer ação'
+                  '\n[5]-Opções de conta'
+                  '\nsair'
+                  '\n')
     if opcao == '1':
         tarefa = input('Qual tarefa você deseja adicionar: ')
         tarefas.append(tarefa)
@@ -129,11 +136,36 @@ while opcao != 'sair':
         undo_tarefas()
     elif opcao == '4':
         redo_tarefas()
-    elif opcao == 'change account':
-        all_tarefas[user + password] = tarefas
-        user, password = signin_or_signup()
-        tarefas = all_tarefas[user + password]
-        desfeitas = []
+    elif opcao == '5':
+        opcao = input('Oque você quer fazer:'
+                      '\n[1]-change account'
+                      '\n[2]-change password'
+                      '\n')
+        while opcao not in ['1', '2']:
+            print('Favor digitar um opção válida')
+            opcao = input('Oque você quer fazer:'
+                          '\n[1]-change account'
+                          '\n[2]-change password'
+                          '\n')
+        if opcao == '1':
+            all_tarefas[user + password] = tarefas
+            user, password = signin_or_signup()
+            tarefas = all_tarefas[user + password]
+            desfeitas = []
+        else:
+            del contas[user]
+            valid = False
+            while valid == False:
+                new_password = input("Qual sua nova senha: ")
+                valid = create_account(user, new_password)  # cria usuário em contas e adiciona chave no all_tarefas
+                if valid == False:
+                    print('Favor escolher outra senha, essa já está em uso para um usuário de mesmo nome')
+            all_tarefas[user+new_password] = tarefas
+            del all_tarefas[user+password]
+            password = new_password
+            print('Senha alterada com sucesso!!!')
+
+
     elif opcao != 'sair':
         print('Opção não localizada, favor digitar apenas opções válidas, por exemplo: 1')
     else:
