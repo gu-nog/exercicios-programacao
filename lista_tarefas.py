@@ -8,6 +8,7 @@
 [x] - passar da área de login para cadastro, vice-versa
 [x] - trocar de usuário
 [x] - trocar a senha
+[] - não permitir usuário com mesmo nome
 """
 
 def listagem_tarefas(tarefas):
