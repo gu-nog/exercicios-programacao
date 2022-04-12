@@ -1,0 +1,5 @@
+- ## Exercícios em python
+  - [Numerical sets generator](https://github.com/gu-nog/programming-exercises/blob/master/python/numerical_sets.py)
+  - [List of tasks](https://github.com/gu-nog/programming-exercises/blob/master/python/tasks_list.py)
+  - [Questions to recognite the killer](https://github.com/gu-nog/programming-exercises/blob/master/python/killer_form.py)
+  - [Full name generator](https://github.com/gu-nog/programming-exercises/blob/master/python/surname.py)
