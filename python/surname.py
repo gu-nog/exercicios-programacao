@@ -2,36 +2,37 @@ from itertools import permutations
 from random import randint
 
 
-def gera_sobrenomes(complementares, qtd_sobrenomes):
-    lista_base = ['Silva', 'Santos', 'Alves', 'Rodrigues', 'Souza', 'Ferreira', 'Perereira', 'Castro', 'Nogueira',
-                  'Diniz']
-    if len(complementares) > 0:
-        lista_final = lista_base + complementares
-    lista_final = lista_base
-    possiveis = list(permutations(lista_final, qtd_sobrenomes))
-    indice_escolhido = randint(0, len(possiveis))
-    return possiveis[indice_escolhido]
+def generate_middle_names(new_possibilities_list, middle_names_quantity):
+    default_middle_names_list = ['Webb', 'Owen', 'Smith', 'Jones', 'Taylor', 'Brown', 'Williams', 'Wilson', 'Johnson',
+                  'Davies', 'Robbinson', 'King', 'Green', 'Harris', 'Martin', 'Thomas', 'Ward', 'Lee']
+    if len(new_possibilities_list) > 10:
+        all_middle_names = new_possibilities_list
+    else:
+        all_middle_names = default_middle_names_list + new_possibilities_list
+    possible_full_names = list(permutations(all_middle_names, middle_names_quantity))
+    chosen_name_index = randint(0, len(possible_full_names))
+    return possible_full_names[chosen_name_index]
 
 
-sobrenomes_adicionados = []
+added_middle_names = []
 while True:
-    opção = input('Oque você quer fazer:\n[1]-Adicionar possível sobrenome\n[2]-Gerar nome\n')
-    if opção == '1':
-        sobrenomes_adicionados.append(input('\nSobrenome que você deseja adicionar: \n'))
-    elif opção == '2':
-        nome_inicial = input('\nQual o primeiro nome: \n')
-        passou = False
-        while passou == False:
+    menu_option = input('What do you need to do:\n[1]-Add a possible middle name\n[2]-Generate name\n')
+    if menu_option == '1':
+        added_middle_names.append(input('\nMiddle name to add: \n'))
+    elif menu_option == '2':
+        first_name = input('\nWhat is the first name: \n')
+        correct_input = False
+        while correct_input == False:
             try:
-                qtd_sobrenomes = int(input('\nQuantos sobrenomes você deseja adicionar: \n'))
-                passou = True
+                middle_names_quantity = int(input('\nHow many middle names to add: \n'))
+                correct_input = True
             except:
-                print('\nFavor colocar um número\n')
-        sobrenomes_escolhidos = gera_sobrenomes(sobrenomes_adicionados, qtd_sobrenomes)
-        print(f"\nO nome escolhido foi: {nome_inicial} ", end='')
-        for sobrenome in sobrenomes_escolhidos:
-            print(f'{sobrenome} ', end='')
+                print('\nPlease put a number\n')
+        chosen_middle_names = generate_middle_names(added_middle_names, middle_names_quantity)
+        print(f"\nThe chosen name was: {first_name} ", end='')
+        for middle_name in chosen_middle_names:
+            print(f'{middle_name} ', end='')
         print('\n')
         break
     else:
-        print('\nFavor digitar apenas, por exemplo: 1\n')
+        print('\nPlease type only 1, for example\n')
